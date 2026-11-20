@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ODA 안내 챗봇
 
-## Getting Started
+**ODA(공적개발원조)를 쉬운 말로 설명하고, 답변마다 출처와 기준일을 함께 알려 주는 안내 챗봇입니다.**
 
-First, run the development server:
+ODA 정보는 ODA Korea, KOICA 등 여러 기관 홈페이지에 흩어져 있고 용어도 어려워서, 업무를 처음 맡은 담당자와 일반 국민이 찾기 어렵습니다. 이 챗봇은 **미리 정리해 둔 공개 자료만 근거로** 질문에 답하고, 자료에 없는 내용은 지어내지 않고 "확인되지 않는 내용입니다"라고 알려 줍니다.
+
+> 이 챗봇은 비공식 안내 서비스입니다. ODA Korea·KOICA의 공개 페이지 내용을 요약해 사용하며, 정확한 최신 내용은 각 기관 홈페이지에서 확인해 주세요.
+
+## 배포 주소
+
+- 사이트: (배포 후 채워집니다)
+- 저장소: https://github.com/kimgyuh/oda-chatbot
+
+## 주요 기능
+
+| 기능 | 설명 |
+|---|---|
+| **자료 근거 답변** | 등록된 ODA 자료(31개 조각)에서 관련 내용을 찾아, 그 내용만으로 5문장 이내로 쉽게 답합니다. 전문 용어에는 괄호로 풀이를 붙입니다. |
+| **출처·기준일 표시** | 답변 아래에 출처(기관명·문서명, 원문 링크)와 자료 기준일을 보여 줍니다. |
+| **모르면 모른다고** | 자료에 없는 질문은 AI를 부르지 않고 정해진 문구와 ODA Korea·KOICA 홈페이지 링크로 안내합니다. |
+| **국가별 사업 현황** | 주요 12개국의 대표사업을 "진행 중"과 "종료"로 나눠 알려 줍니다. (자료 표의 시작·종료 연도 기준) |
+| **안전장치** | 개인정보(전화번호·이메일 등)·ODA와 무관한 질문·500자 초과·정치적 의견·개별 신청 자격 판단은 정해진 안내로 처리합니다. 한 사람당 하루 20개까지 질문할 수 있습니다. |
+| **자주 묻는 질문 버튼** | 자주 하는 질문 5개를 눌러서 바로 물어볼 수 있습니다. |
+
+로그인이 필요 없고, 대화 내용은 저장하지 않습니다. (새로고침하면 사라집니다)
+
+## 사용 방법
+
+1. 사이트에 접속합니다.
+2. 질문을 입력하거나 "자주 묻는 질문" 버튼을 누릅니다. (예: "ODA가 뭐예요?", "베트남에서 진행 중인 사업과 종료된 사업을 구분해서 알려줘")
+3. 답변과 함께 나오는 **출처** 링크로 원문을 확인합니다.
+
+## 기술 스택
+
+- **Next.js 16** (App Router) · TypeScript · Tailwind CSS — 화면과 서버(API)를 한 프로젝트에서 처리하고 Vercel로 배포
+- **OpenAI API** — 기본 모델 `gpt-4o-mini` (관리자가 환경 변수로 `gpt-6-luna`로 바꿀 수 있음)
+- 자료 검색: 직접 만든 낱말 비교 방식 (별도 데이터베이스 없음)
+- **Vitest** — 자동 시험 173건
+
+## 내 컴퓨터에서 실행하기
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+프로젝트 폴더에 `.env` 파일을 만들고 OpenAI API 키를 한 줄 적습니다. (이 파일은 GitHub에 올라가지 않습니다)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+OPENAI_API_KEY=여기에_본인_키
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev     # http://localhost:3000 에서 확인
+npm test        # 자동 시험
+npm run build   # 배포용 빌드
+```
 
-## Learn More
+### 환경 변수
 
-To learn more about Next.js, take a look at the following resources:
+| 이름 | 필수 | 설명 |
+|---|:-:|---|
+| `OPENAI_API_KEY` | ✅ | OpenAI API 키. 서버에서만 읽으며 화면(브라우저)으로 나가지 않습니다. |
+| `OPENAI_MODEL_CHOICE` | 선택 | 상위 모델을 쓰고 싶을 때만 `gpt-6-luna`를 적습니다. 비우면 `gpt-4o-mini`를 씁니다. |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+> 참고: `gpt-4o-mini`는 OpenAI 공식 문서(2026-11-20 확인) 기준 2027-01-14에 서비스가 중단될 예정입니다. 그 전에 `lib/models.ts`의 `DEFAULT_MODEL`을 바꿔야 합니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 폴더 구조
 
-## Deploy on Vercel
+```
+app/            화면(page.tsx)과 서버 주소(api/chat/route.ts)
+components/     채팅 화면 조각 (대화 영역, 입력창, 질문 버튼)
+lib/            검색, AI 지시문, 입력 검사, 출처 해석, 하루 한도, 안내 문구
+data/           ODA 자료 조각 (oda-sources.json)
+tests/          자동 시험
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 문서
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+이 프로젝트는 "계획 → 설계 → 구현 → 검증 → 개선" 순서로 만들었고, 각 단계의 문서를 함께 담았습니다.
+
+| 문서 | 내용 |
+|---|---|
+| [PRD.md](PRD.md) | 기획서: 무엇을, 왜 만드는지 (문제·목표·기능·범위·보안) |
+| [PLAN.md](PLAN.md) | 계획서: 어떤 순서로 만들었는지, 성공 기준, 진행 상태 |
+| [DESIGN.md](DESIGN.md) | 설계서: 화면 구성, 데이터 흐름, 서버 명세, 기술 선택 |
+| [CHECK.md](CHECK.md) | 검증 결과: 설계 대비 차이(Gap) 분석, 보안 점검, 보완 내역 |
+| [ACCURACY-CHECK.md](ACCURACY-CHECK.md) | 정답률 점검표 (질문 20개 + 모르는 질문 5개) |
+| [CLAUDE.md](CLAUDE.md) | AI와 함께 개발할 때 지킨 프로젝트 규칙 |
+
+## 알려진 한계
+
+- 하루 20개 제한은 브라우저 쿠키로 세기 때문에, 쿠키를 지우거나 프로그램으로 직접 요청하면 우회할 수 있습니다. (실제 서비스에서는 서버 쪽 저장소가 필요합니다)
+- 자료는 개발자가 직접 정리해 넣은 것이라 실시간으로 갱신되지 않습니다. 각 답변의 기준일을 확인해 주세요.
+- 국가별 "진행 중/종료"는 자료 표의 연도를 기준으로 나눈 것이며, 대표사업만 실려 있어 그 나라의 모든 사업은 아닙니다.
+- "5문장 이내"는 AI에게 하는 요청이라, 길게 요청하면 넘을 수 있습니다.
+- 챗봇은 이전 대화를 기억하지 않고 질문마다 독립적으로 답합니다.
+
+## 만든 사람
+
+김규형 — AI 코딩 도구(Claude)와 함께 기획부터 배포까지 진행했습니다.
