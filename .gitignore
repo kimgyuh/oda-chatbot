@@ -36,6 +36,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+# 삭제 대기 폴더 (사용자가 직접 확인 후 삭제)
+/trash-can/
+
+# 작업 도구(bkit)의 기록 폴더 (공개할 필요 없음)
+/.bkit/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

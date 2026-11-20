@@ -1,8 +1,11 @@
 @import "tailwindcss";
 
+/* KOICA 홈페이지 느낌의 색: 진한 파랑 상단 띠(#004A8F), 남색 제목(#2A4A8D), 연한 회색 바탕, 각진 모서리.
+   (KOICA 로고·이미지는 쓰지 않고 색과 배치의 분위기만 따른다.) */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #eef1f5;
+  --foreground: #333333;
+  color-scheme: light;
 }
 
 @theme inline {
@@ -12,15 +15,11 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* 한글이 또렷하게 보이도록 한글 글꼴을 앞에 둔다. */
+  font-family: "Noto Sans KR", "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic",
+    system-ui, sans-serif;
+  letter-spacing: -0.01em;
 }
