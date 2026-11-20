@@ -8,7 +8,7 @@ ODA 정보는 ODA Korea, KOICA 등 여러 기관 홈페이지에 흩어져 있�
 
 ## 배포 주소
 
-- 사이트: (배포 후 채워집니다)
+- 사이트: https://oda-chatbot.vercel.app
 - 저장소: https://github.com/kimgyuh/oda-chatbot
 
 ## 주요 기능
